@@ -1,119 +1,97 @@
-======================================================================
-README - STUDI KASUS KLASIFIKASI: DIAGNOSIS KANKER PAYUDARA
-Breast Cancer Wisconsin (Diagnostic) dengan Machine Learning
-======================================================================
+# 🩺 Klasifikasi Diagnosis Kanker Payudara dengan Machine Learning
 
-1. ISI FOLDER
-----------------------------------------------------------------------
-- studi_kasus_klasifikasi_kanker_payudara.ipynb : notebook Python (kode
-  + penjelasan + hasil eksekusi)
-- wdbc_breast_cancer.csv                        : dataset mentah
-- readme.txt                                    : berkas ini
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-orange)
+![License](https://img.shields.io/badge/Dataset-CC%20BY%204.0-green)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/USERNAME/NAMA-REPO/blob/main/studi_kasus_klasifikasi_kanker_payudara.ipynb)
 
-2. RINGKASAN KASUS
-----------------------------------------------------------------------
-Tujuan  : mengklasifikasikan tumor payudara sebagai GANAS (Malignant, M)
-          atau JINAK (Benign, B) berdasarkan ciri inti sel dari citra
-          Fine Needle Aspirate (FNA).
-Jenis   : klasifikasi biner (supervised learning).
-Metode  : Logistic Regression, KNN, Decision Tree, SVM (RBF), Random
-          Forest; model terbaik (SVM) dituning dengan GridSearchCV.
-Hasil   : pada data uji (114 pasien) SVM tuned mencapai akurasi 97,4%,
-          precision 100%, recall 92,9%, F1 0,963, ROC-AUC 0,993.
+Studi kasus klasifikasi biner untuk menentukan apakah tumor payudara **ganas (Malignant)** atau **jinak (Benign)** berdasarkan ciri inti sel dari citra *Fine Needle Aspirate* (FNA). Tugas individu mata kuliah Machine Learning.
 
-3. DATASET (wdbc_breast_cancer.csv)
-----------------------------------------------------------------------
-Sumber asli : UCI Machine Learning Repository, "Breast Cancer Wisconsin
-              (Diagnostic)", ID 17, lisensi CC BY 4.0
-              https://archive.ics.uci.edu/dataset/17/breast-cancer-wisconsin-diagnostic
-Pembuat     : William H. Wolberg, W. Nick Street, Olvi L. Mangasarian
-              (University of Wisconsin), didonasikan tahun 1995.
-Catatan     : CSV ini diekspor dari salinan dataset yang sama di
-              scikit-learn (sklearn.datasets.load_breast_cancer), dengan
-              label dikembalikan ke format UCI (M/B). Kolom ID pasien
-              tidak tersedia pada salinan ini.
+## 📌 Latar Belakang
 
-Ukuran      : 569 baris (pasien) x 31 kolom
-Missing     : tidak ada
-Kelas       : B (jinak) = 357 (62,7%) ; M (ganas) = 212 (37,3%)
+Penilaian sampel sel secara manual di bawah mikroskop bersifat subjektif dan bergantung pada pengalaman ahli patologi. Model *machine learning* dapat menjadi alat bantu keputusan yang cepat dan konsisten (*second opinion*), **bukan pengganti dokter**.
 
-Kolom:
-- diagnosis : label/target. M = ganas, B = jinak.
-- 30 fitur numerik, berasal dari 10 ciri inti sel, masing-masing dihitung
-  dalam 3 bentuk (mean = rata-rata, error = galat standar, worst = rata-
-  rata dari tiga nilai terbesar). Awalan kolom menunjukkan bentuknya:
+## 📊 Dataset
 
-  Ciri dasar (10)         Arti
-  ---------------------   ------------------------------------------
-  radius                  rata-rata jarak pusat ke tepi inti sel
-  texture                 simpangan baku nilai skala abu-abu
-  perimeter               keliling inti sel
-  area                    luas inti sel
-  smoothness              variasi lokal panjang radius
-  compactness             perimeter^2 / area - 1,0
-  concavity               tingkat keparahan bagian cekung kontur
-  concave_points          jumlah bagian cekung pada kontur
-  symmetry                kesimetrisan inti sel
-  fractal_dimension       "coastline approximation" - 1
+| Aspek | Keterangan |
+|---|---|
+| Nama | Breast Cancer Wisconsin (Diagnostic) |
+| Sumber | [UCI Machine Learning Repository (ID 17)](https://archive.ics.uci.edu/dataset/17/breast-cancer-wisconsin-diagnostic) |
+| Jumlah data | 569 pasien |
+| Fitur | 30 fitur numerik (10 ciri inti sel × mean, error, worst) |
+| Target | `diagnosis`: **M** = ganas (212), **B** = jinak (357) |
+| Missing value | Tidak ada |
+| Lisensi | CC BY 4.0 |
 
-  Contoh nama kolom: mean_radius, radius_error, worst_radius,
-  mean_concave_points, worst_texture, dst.
+**10 ciri dasar inti sel:** radius, texture, perimeter, area, smoothness, compactness, concavity, concave points, symmetry, fractal dimension.
 
-4. ISI NOTEBOOK (.ipynb) - URUTAN BAGIAN
-----------------------------------------------------------------------
-1. Latar belakang & permasalahan
-2. Sumber data & rujukan
-   2.1 Penjelasan dataset: gambaran umum, tabel ringkasan (jumlah data,
-       target, distribusi kelas), struktur 30 fitur (10 ciri x mean/error/
-       worst), kamus data 10 ciri dasar, dan catatan penggunaan; ditutup
-       sel kode yang menampilkan kamus nama kolom
-3. Metode klasifikasi yang dibandingkan
-4. Tahapan penerapan:
-   4.1 Import library & muat data mentah
-   4.2 Eksplorasi data (EDA): info data, missing value, distribusi
-       kelas, statistik deskriptif, boxplot, heatmap korelasi
-   4.3 Pra-pemrosesan: M->1, B->0; split 80% latih / 20% uji
-       (stratifikasi, random_state=42); StandardScaler di dalam
-       Pipeline agar tidak terjadi data leakage
-   4.4 Pemodelan: 5 algoritma dibandingkan dengan Stratified 5-Fold CV
-   4.5 Tuning hyperparameter SVM (C, gamma, kernel) dengan GridSearchCV
-   4.6 Evaluasi akhir pada data uji: accuracy, precision, recall, F1,
-       ROC-AUC, classification report, confusion matrix, kurva ROC
-   4.7 Interpretasi: permutation importance (10 fitur terpenting)
-   4.8 Perbandingan semua model pada data uji + contoh prediksi 5 pasien
-5. Hasil, pembahasan, dan manfaat
-6. Keterbatasan
-7. Daftar pustaka
+> Berkas `wdbc_breast_cancer.csv` diekspor dari salinan dataset yang sama di scikit-learn (`load_breast_cancer`), dengan label dikembalikan ke format UCI (M/B).
 
-5. CARA MENJALANKAN
-----------------------------------------------------------------------
-a. Pastikan Python 3.9+ terpasang, lalu instal library:
-     pip install numpy pandas matplotlib seaborn scikit-learn jupyter
-b. Letakkan wdbc_breast_cancer.csv SATU FOLDER dengan file .ipynb.
-   (Jika CSV tidak ditemukan, notebook otomatis memuat data dari
-   scikit-learn.)
-c. Jalankan:  jupyter notebook
-   Buka file .ipynb, lalu pilih Run > Run All Cells.
-   Alternatif: unggah kedua berkas ke Google Colab.
-d. Hasil sama setiap dijalankan karena random_state dikunci (42).
+## 🗂️ Struktur Repositori
 
-6. KETERBATASAN
-----------------------------------------------------------------------
-- Data hanya 569 pasien dari satu institusi; perlu validasi eksternal.
-- Data uji kecil (114), selisih 1 kasus mengubah metrik cukup besar.
-- Model bukan pengganti dokter; hanya alat bantu keputusan. Pada data
-  uji, 3 dari 42 kasus ganas masih terlewat (false negative).
+```
+├── studi_kasus_klasifikasi_kanker_payudara.ipynb   # notebook utama (kode + penjelasan + hasil)
+├── wdbc_breast_cancer.csv                          # dataset mentah
+├── readme.txt                                      # penjelasan singkat isi berkas
+└── README.md
+```
 
-7. DAFTAR PUSTAKA
-----------------------------------------------------------------------
-1. Wolberg, W., Mangasarian, O., Street, N., & Street, W. (1995).
-   Breast Cancer Wisconsin (Diagnostic) [Dataset]. UCI Machine Learning
-   Repository. https://archive.ics.uci.edu/dataset/17/breast-cancer-wisconsin-diagnostic
-2. Street, W.N., Wolberg, W.H., & Mangasarian, O.L. (1993). Nuclear
-   feature extraction for breast tumor diagnosis. IS&T/SPIE Symposium on
-   Electronic Imaging, vol. 1905, hlm. 861-870.
-3. Wolberg, W.H., Street, W.N., & Mangasarian, O.L. (1994). Machine
-   learning techniques to diagnose breast cancer from fine-needle
-   aspirates. Cancer Letters, 77, 163-171.
-4. Pedregosa, F. et al. (2011). Scikit-learn: Machine Learning in
-   Python. Journal of Machine Learning Research, 12, 2825-2830.
+## ⚙️ Tahapan Penerapan
+
+1. Eksplorasi data (EDA): distribusi kelas, statistik, boxplot, heatmap korelasi
+2. Pra-pemrosesan: encoding label (M=1, B=0), split 80/20 terstratifikasi, standardisasi di dalam `Pipeline` (mencegah *data leakage*)
+3. Pemodelan 5 algoritma dengan Stratified 5-Fold Cross-Validation
+4. Tuning hyperparameter SVM dengan `GridSearchCV` (terbaik: `C=10`, kernel RBF, `gamma='scale'`)
+5. Evaluasi pada data uji: accuracy, precision, recall, F1, ROC-AUC, confusion matrix
+6. Interpretasi fitur dengan *permutation importance*
+
+## 🏆 Hasil (data uji, 114 pasien)
+
+| Model | Accuracy | Precision | Recall | F1 | ROC-AUC |
+|---|---|---|---|---|---|
+| **SVM (tuned)** | **0,9737** | **1,0000** | 0,9286 | **0,9630** | 0,9927 |
+| SVM (RBF) | 0,9737 | 1,0000 | 0,9286 | 0,9630 | 0,9947 |
+| Random Forest | 0,9737 | 1,0000 | 0,9286 | 0,9630 | 0,9944 |
+| Logistic Regression | 0,9649 | 0,9750 | 0,9286 | 0,9512 | 0,9960 |
+| KNN | 0,9561 | 0,9744 | 0,9048 | 0,9383 | 0,9823 |
+| Decision Tree | 0,9211 | 0,9459 | 0,8333 | 0,8861 | 0,9448 |
+
+**Confusion matrix SVM (tuned):** TP = 39, TN = 72, FP = 0, FN = 3.
+
+**Fitur paling berpengaruh:** `worst_texture`, `worst_concavity`, `mean_concavity`.
+
+## 💡 Manfaat
+
+- Memberi *second opinion* yang objektif dan konsisten bagi tenaga medis
+- Mempercepat prioritas pemeriksaan saat tenaga ahli terbatas
+- Mendukung deteksi dini
+- Fitur penting dapat divalidasi dengan pengetahuan patologi
+
+## 🚀 Cara Menjalankan
+
+```bash
+git clone https://github.com/USERNAME/NAMA-REPO.git
+cd NAMA-REPO
+pip install numpy pandas matplotlib seaborn scikit-learn jupyter
+jupyter notebook
+```
+
+Buka `studi_kasus_klasifikasi_kanker_payudara.ipynb`, lalu pilih **Run → Run All Cells**. Pastikan `wdbc_breast_cancer.csv` berada di folder yang sama. Atau klik badge **Open in Colab** di atas.
+
+## ⚠️ Keterbatasan
+
+- Hanya 569 pasien dari satu institusi, sehingga perlu validasi eksternal
+- Data uji kecil (114), satu kasus berbeda mengubah metrik cukup besar
+- Pada data uji, 3 dari 42 kasus ganas masih terlewat (*false negative*)
+- Untuk tujuan pembelajaran, tidak untuk penggunaan klinis nyata
+
+## 📚 Referensi
+
+1. Wolberg, W., Mangasarian, O., Street, N., & Street, W. (1995). *Breast Cancer Wisconsin (Diagnostic)* [Dataset]. UCI Machine Learning Repository. https://archive.ics.uci.edu/dataset/17/breast-cancer-wisconsin-diagnostic
+2. Street, W.N., Wolberg, W.H., & Mangasarian, O.L. (1993). Nuclear feature extraction for breast tumor diagnosis. *IS&T/SPIE Symposium on Electronic Imaging*, 1905, 861–870.
+3. Wolberg, W.H., Street, W.N., & Mangasarian, O.L. (1994). Machine learning techniques to diagnose breast cancer from fine-needle aspirates. *Cancer Letters*, 77, 163–171.
+4. Pedregosa, F. et al. (2011). Scikit-learn: Machine Learning in Python. *JMLR*, 12, 2825–2830.
+
+## 👤 Penulis
+
+Nama: **[Nama Anda]** · NIM: **[NIM Anda]** · Mata Kuliah: Machine Learning
